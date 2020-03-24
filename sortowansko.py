@@ -39,38 +39,48 @@ def selectionsort(table):
         right -= 1
     return table
 
-def show_me(table, a, b):
+
+def quicksort(table): 
     print(table)
-    print(a)
-    print(b)
-
-
-    
-  
-
-def quicksort(table,low,high): 
-    if low < high:
-        i = ( low-1 )
-        pivot = table[high]    
-        for j in range(low , high): 
-            if table[j] <= pivot: 
-                i = i+1 
-                table[i],table[j] = table[j],table[i] 
-        table[i+1],table[high] = table[high],table[i+1] 
-        pi = i+1 
-        quicksort(table, low, pi-1) 
-        quicksort(table, pi+1, high) 
-
-  
-table = [5,2,7,1,9,2]
-print(quicksort(table, 0, len(table)-1))   
-print(table)
-
-
-    
-
-    
-
+    low = 0
+    high = len(table)-1
+    if low==high:
+        return table
+    pivot = table[low]
+    p = low
+    q = high
+    while True:
+        while p!=q:
+            if table[q] < table[p]:
+                buf = table[p]
+                table[p] = table[q]
+                table[q]= buf
+                break
+            else:
+                q -=1
+        while p!=q:
+            if table[q] < table[p]:
+                buf = table[p]
+                table[p] = table[q]
+                table[q]= buf
+                break
+            else:
+                p += 1
+        if p==q:
+            break
+    if p==low:
+        t = [table[p]]
+        t += quicksort(table[p+1 : high+1])
+        return t
+    elif p == high:
+        t = quicksort(table[low : p])
+        t.append(table[p])
+        return t
+    else:
+        lewa = quicksort(table[low : p])
+        lewa.append(table[p])
+        lewa += (quicksort(table[p+1 : high+1]))
+        return lewa
 
 def load(file_name):
     with open(file_name, encoding="utf-8") as file:
@@ -85,4 +95,4 @@ if __name__ == "__main__":
     words = load("pan-tadeusz.txt")
     sorted_words_a = bubblesort(words[:1000])
     sorted_words_b = selectionsort(words[:1000])
-    pass
+    sorted_words_c = quicksort(words[:1000])
