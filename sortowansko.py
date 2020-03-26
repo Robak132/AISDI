@@ -2,6 +2,7 @@
 AISDI - Zad 1
 Jakub Robaczewski, Oskar Bartosz
 """
+import timeit
 
 
 def bubblesort(table):
@@ -39,48 +40,45 @@ def selectionsort(table):
         right -= 1
     return table
 
+def quicksort(table):
+    min = 0
+    max = len(table) - 1
+    quicksort_t(table, min, max)
+    return table
 
-def quicksort(table): 
-    print(table)
-    low = 0
-    high = len(table)-1
-    if low==high:
-        return table
-    pivot = table[low]
-    p = low
-    q = high
+
+def quicksort_t(table, min, max):
+    #Jako oś przyjmuje zawsze pierwszy element z listy, zamiana zawsze tego elementu z elementem więkzym lub większym.
+    if min >= max or min<0 or max >= len(table):
+        return 0
+    p = min
+    q = max
+    p_q_bool = False
     while True:
-        while p!=q:
-            if table[q] < table[p]:
-                buf = table[p]
-                table[p] = table[q]
-                table[q]= buf
-                break
-            else:
-                q -=1
-        while p!=q:
-            if table[q] < table[p]:
-                buf = table[p]
-                table[p] = table[q]
-                table[q]= buf
-                break
-            else:
-                p += 1
-        if p==q:
+        if table[p]>=table[q]:
+            table[p], table[q] = table[q], table[p]
+            p_q_bool = not p_q_bool
+        if p_q_bool:
+            p += 1
+        else:
+            q -= 1
+        if p == q:
             break
-    if p==low:
-        t = [table[p]]
-        t += quicksort(table[p+1 : high+1])
-        return t
-    elif p == high:
-        t = quicksort(table[low : p])
-        t.append(table[p])
-        return t
+    quicksort_t(table, min, p-1)
+    quicksort_t(table, p+1, max)
+
+tab = [4,2,9,4,8,1,0,4,7,2]
+print(quicksort(tab))
+
+def measureSorting(func, table, elements = None):
+    if elements == None:
+        string_m = f"{func}({table})"
     else:
-        lewa = quicksort(table[low : p])
-        lewa.append(table[p])
-        lewa += (quicksort(table[p+1 : high+1]))
-        return lewa
+        string_m = f"{func}({table}[:{elements}])"
+    string_s = f"from __main__ import {func}\nfrom __main__ import {table}"
+    time = timeit.timeit(string_m, string_s, number = 1)
+    return time
+
 
 def load(file_name):
     with open(file_name, encoding="utf-8") as file:
@@ -90,9 +88,12 @@ def load(file_name):
             words += line.lower().split(" ")
         return words
 
-
 if __name__ == "__main__":
     words = load("pan-tadeusz.txt")
     sorted_words_a = bubblesort(words[:1000])
     sorted_words_b = selectionsort(words[:1000])
     sorted_words_c = quicksort(words[:1000])
+    time_q = measureSorting("quicksort", "words", 1000)
+    time_b = measureSorting("bubblesort", "words", 1000)
+    time_s = measureSorting("selectionsort", "words", 1000)
+    print(f"quick: {time_q}\nselection: {time_s}\nbubble: {time_b}\nQuickest: {min(time_q,time_b,time_s)}")
