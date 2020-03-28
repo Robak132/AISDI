@@ -1,5 +1,5 @@
 """
-AISDI - Zad 1
+AISDI - Zad 2
 Jakub Robaczewski, Oskar Bartosz
 """
 import timeit
@@ -40,22 +40,23 @@ def selectionsort(table):
         right -= 1
     return table
 
+
 def quicksort(table):
-    min = 0
-    max = len(table) - 1
-    quicksort_t(table, min, max)
+    _min = 0
+    _max = len(table) - 1
+    quicksort_t(table, _min, _max)
     return table
 
 
-def quicksort_t(table, min, max):
-    #Jako oś przyjmuje zawsze pierwszy element z listy, zamiana zawsze tego elementu z elementem więkzym lub większym.
-    if min >= max or min<0 or max >= len(table):
+def quicksort_t(table, _min, _max):
+    # Jako oś przyjmuje zawsze pierwszy element z listy, zamiana zawsze tego elementu z elementem więkzym lub większym.
+    if _min >= _max or _min < 0 or _max >= len(table):
         return 0
-    p = min
-    q = max
+    p = _min
+    q = _max
     p_q_bool = False
     while True:
-        if table[p]>=table[q]:
+        if table[p] >= table[q]:
             table[p], table[q] = table[q], table[p]
             p_q_bool = not p_q_bool
         if p_q_bool:
@@ -64,19 +65,17 @@ def quicksort_t(table, min, max):
             q -= 1
         if p == q:
             break
-    quicksort_t(table, min, p-1)
-    quicksort_t(table, p+1, max)
+    quicksort_t(table, _min, p-1)
+    quicksort_t(table, p+1, _max)
 
-tab = [4,2,9,4,8,1,0,4,7,2]
-print(quicksort(tab))
 
-def measureSorting(func, table, elements = None):
-    if elements == None:
+def measureSorting(func, table, elements=None):
+    if elements is None:
         string_m = f"{func}({table})"
     else:
         string_m = f"{func}({table}[:{elements}])"
     string_s = f"from __main__ import {func}\nfrom __main__ import {table}"
-    time = timeit.timeit(string_m, string_s, number = 1)
+    time = timeit.timeit(string_m, string_s, number=1)
     return time
 
 
@@ -88,12 +87,36 @@ def load(file_name):
             words += line.lower().split(" ")
         return words
 
+
+def print_mesurements(func, table, start, stop, step, file_name):
+    with open(file_name, "w+") as file:
+        for i in range(start, stop+1, step):
+            time = measureSorting(func, table, i)
+            file.write(f"{i:6}: {str(time).replace('.', ',')}\n")
+            print(f"{i:6}: {str(time).replace('.', ',')}")
+
+
+def sort_test(table):
+    print("Selection sort")
+    print(selectionsort(table))
+    print("Bubble sort")
+    print(bubblesort(table))
+    print("Quick sort")
+    print(quicksort(table))
+
+
 if __name__ == "__main__":
     words = load("pan-tadeusz.txt")
-    sorted_words_a = bubblesort(words[:1000])
-    sorted_words_b = selectionsort(words[:1000])
-    sorted_words_c = quicksort(words[:1000])
-    time_q = measureSorting("quicksort", "words", 1000)
-    time_b = measureSorting("bubblesort", "words", 1000)
-    time_s = measureSorting("selectionsort", "words", 1000)
-    print(f"quick: {time_q}\nselection: {time_s}\nbubble: {time_b}\nQuickest: {min(time_q,time_b,time_s)}")
+    test_words = [11, 46, 90, 9, 45, 39, 43, 64]
+
+    # Test algorytmów sortujących
+    # sort_test(test_words)
+
+    print("Selection sort")
+    print_mesurements("selectionsort", "words", 1000, 20000, 1000, "select_sort.txt")
+
+    print("Bubble sort")
+    print_mesurements("bubblesort", "words", 1000, 20000, 1000, "bubble_sort.txt")
+
+    print("Quick sort")
+    print_mesurements("quicksort", "words", 1000, 70000, 1000, "quick_sort.txt")
