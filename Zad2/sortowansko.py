@@ -105,18 +105,31 @@ def sort_test(table):
     print(quicksort(table))
 
 
+def selection_sort_2(array):
+    for i in range(0, len(array)-1):
+        _min = i
+        for j in range(i+1, len(array)):
+            if (array[j] < array[_min]):
+                _min = j
+        array[i], array[_min] = array[_min], array[i]
+    return array
+
+
 if __name__ == "__main__":
     words = load("pan-tadeusz.txt")
     test_words = [11, 46, 90, 9, 45, 39, 43, 64]
+    alpha = ['a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'q', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', "ż", "ź"]
+
+    print(selection_sort_2(words[:100]))
 
     # Test algorytmów sortujących
     # sort_test(test_words)
 
-    print("Selection sort")
-    print_mesurements("selectionsort", "words", 1000, 20000, 1000, "select_sort.txt")
+    # print("Selection sort")
+    # print_mesurements("selectionsort", "words", 1000, 20000, 1000, "select_sort.txt")
 
-    print("Bubble sort")
-    print_mesurements("bubblesort", "words", 1000, 20000, 1000, "bubble_sort.txt")
+    # print("Bubble sort")
+    # print_mesurements("bubblesort", "words", 1000, 20000, 1000, "bubble_sort.txt")
 
-    print("Quick sort")
-    print_mesurements("quicksort", "words", 1000, 70000, 1000, "quick_sort.txt")
+    # print("Quick sort")
+    # print_mesurements("quicksort", "words", 1000, 70000, 1000, "quick_sort.txt")
