@@ -66,6 +66,7 @@ class BinaryTree:
 class Pot():
     def __init__(self, root):
         self.root = root
+        self.node_value = None
 
     def set_left(self, root):
         self.root = root
@@ -81,6 +82,9 @@ class Pot():
 
     def __repr__(self):
         return "None"
+
+    #def balance(self, counter = 0):
+    #    self.root.
 
 
 class AVLNode(Node):
@@ -101,6 +105,7 @@ class AVLNode(Node):
                     buff = 0 
                 if abs(self.check_node_balance()) == 2:
                     buff = self.rotate()
+                    self.father.balance()
                 return buff
             else:
                 self.right = AVLNode(number, self)
@@ -117,6 +122,7 @@ class AVLNode(Node):
                     buff = 0 
                 if abs(self.check_node_balance()) == 2:
                     buff = self.rotate()
+                    self.father.balance()
                 return buff
             else:
                 self.left = AVLNode(number, self)
@@ -148,8 +154,24 @@ class AVLNode(Node):
         if self.right is not None:
             self.right.show()
 
+    def balance(self, counter = 0):
+        if self.left is None and self.right is None:
+            self.thanos_value = 0
+            return counter
+        if self.left is not None:
+            left_h = self.left.balance(counter + 1)
+        else:
+            left_h = counter
+        if self.right is not None:
+            right_h = self.right.balance(counter + 1)
+        else:
+            right_h = counter
+        self.thanos_value = right_h - left_h
+        return max(right_h, left_h)
+            
+
     def rotate(self):
-        print("ROTACJA")
+       # print("ROTACJA")
         if self.check_node_balance() == -2:
             if self.left.check_node_balance() == 1:
                 self.rotate_left(self, self.left)
@@ -180,15 +202,6 @@ class AVLNode(Node):
         if right is not None:
             right.father = father
         
-        node.thanos_value = 0
-        if right is not None:
-            if right.thanos_value == 1:
-                right.thanos_value == -1
-            else:
-                right.thanos_value = 0
-        if right_left is not None:
-            right_left.thanos_value = 0
-
     def rotate_right(self, father, node):
         left = node.left
         left_right = left.right
@@ -209,15 +222,6 @@ class AVLNode(Node):
         if left is not None:
             left.father = father
 
-        node.thanos_value = 0
-        if left is not None:
-            if left.thanos_value == -1:
-                left.thanos_value == 1
-            else:
-                left.thanos_value = 0
-        if left_right is not None:
-            left_right.thanos_value = 0
-
 
 class AVLTree(BinaryTree):
     def __init__(self, list_of_values):
@@ -227,27 +231,26 @@ class AVLTree(BinaryTree):
             self.add_node(element)
 
     def add_node(self, number):
-        print(f"\n\nDODAWANIE: {number}")
+       # print(f"\n\nDODAWANIE: {number}")
         if self.treepot.root is None:
             self.treepot.root = AVLNode(number, self.treepot)
         else:
-           print(f"Nasz root: {self.treepot.root}")
+        #   print(f"Nasz root: {self.treepot.root}")
            self.treepot.root.add_new(number)
-           self.show()
+          # self.show()
 
     def show(self):
         self.treepot.root.show()
 
 
 if __name__ == "__main__":
-    _list = [randint(1, 50) for i in range(1, 20)]
+    _list = [randint(1, 50) for i in range(1, 1000)]
     tablica_rosnaca = [1,2,3,4,5,6,7,8,9,10]
     tablica_test = [10,7,12,5,8,11,13,4,6,2]
-    tablica_okropna = [44,20,45,18,30,33]
+    tablica_okropna = [44,20,18,45,30,33]
     tabb = [3,2,1]
 
-
-
-    avltree = AVLTree(tabb)
-    #avltree.show()
-    print(_list)
+    avltree = AVLTree(_list)
+    avltree.show()
+    #print(_list)
+    
