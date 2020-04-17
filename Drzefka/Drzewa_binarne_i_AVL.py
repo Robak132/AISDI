@@ -1,7 +1,8 @@
 from random import randint
 
+
 class BinaryTreeError(Exception):
-    pass 
+    pass
 
 
 class Node:
@@ -19,7 +20,7 @@ class Node:
             self.number_of_copies += 1
         elif self.node_value < number:
             if self.right is not None:
-                self.right.add_new(number)   
+                self.right.add_new(number)
             else:
                 self.right = Node(number)
         else:
@@ -98,7 +99,7 @@ class AVLNode(Node):
                 buff = self.right.add_new(number)
                 self.thanos_value += buff
                 if self.thanos_value == 0:
-                    buff = 0 
+                    buff = 0
                 if abs(self.check_node_balance()) == 2:
                     buff = self.rotate()
                 return buff
@@ -114,7 +115,7 @@ class AVLNode(Node):
                 buff = self.left.add_new(number)
                 self.thanos_value -= buff
                 if self.thanos_value == 0:
-                    buff = 0 
+                    buff = 0
                 if abs(self.check_node_balance()) == 2:
                     buff = self.rotate()
                 return buff
@@ -179,7 +180,7 @@ class AVLNode(Node):
 
         if right is not None:
             right.father = father
-        
+
         node.thanos_value = 0
         if right is not None:
             if right.thanos_value == 1:
@@ -192,7 +193,7 @@ class AVLNode(Node):
     def rotate_right(self, father, node):
         left = node.left
         left_right = left.right
-        
+
         left.set_right(node)
         if node is not None:
             node.father = left
@@ -231,9 +232,9 @@ class AVLTree(BinaryTree):
         if self.treepot.root is None:
             self.treepot.root = AVLNode(number, self.treepot)
         else:
-           print(f"Nasz root: {self.treepot.root}")
-           self.treepot.root.add_new(number)
-           self.show()
+            print(f"Nasz root: {self.treepot.root}")
+            self.treepot.root.add_new(number)
+            self.show()
 
     def show(self):
         self.treepot.root.show()
@@ -241,13 +242,7 @@ class AVLTree(BinaryTree):
 
 if __name__ == "__main__":
     _list = [randint(1, 50) for i in range(1, 20)]
-    tablica_rosnaca = [1,2,3,4,5,6,7,8,9,10]
-    tablica_test = [10,7,12,5,8,11,13,4,6,2]
-    tablica_okropna = [44,20,45,18,30,33]
-    tabb = [3,2,1]
 
-
-
-    avltree = AVLTree(tabb)
-    #avltree.show()
+    avltree = AVLTree(_list)
+    # avltree.show()
     print(_list)
