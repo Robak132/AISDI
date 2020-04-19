@@ -53,13 +53,13 @@ class BinaryTree:
     Działa na węzłach, jego podstawową jednostką którą przechowuje jest węzeł.
     Posiada wskaźnik na root, Czyli pierwszy węzeł drzewa.
     """
-    def __init__(self, list_of_values = None):
+    def __init__(self, list_of_values=None):
         """
         Inicjalizowanie drzewa listą.
         Wartości z listy są do niego dodawane kolejno
         """
         self.root = None
-        if list_of_values != None:
+        if list_of_values is not None:
             self.take_list(list_of_values)
 
     def take_list(self, list_of_values):
@@ -80,7 +80,7 @@ class BinaryTree:
         """
         Funkcja zwracająca węzeł drzewa, który trzyma wartość "number"
         """
-        active_node = self.root                                             # Przypisanie korzenia pod buff 
+        active_node = self.root                                             # Przypisanie korzenia pod buff
         while active_node.node_value != number:                             # Pętla trwa dopóki nie znajdzie węzła z "number"
             if active_node.right is None and active_node.left is None:      # Sygnalizuje brak elementu w drzewie przez zwrócenie "None"
                 return None
@@ -99,8 +99,7 @@ class BinaryTree:
         Dostaje na wejście listę rzeczy które wyszukuje w drzewie.
         """
         for value in list_of_values:
-                self.find_node(value)
-
+            self.find_node(value)
 
 
 class Pot():
@@ -152,11 +151,11 @@ class AVLNode(Node):
             self.number_of_copies += 1
             return 0
         elif self.node_value < number:                          # Wybiera lewą gałąź jeśli "number" jest mniejszy od wartości węzła
-            if self.right is not None:                          # Jeśli po prawej stronie już coś istnieje, przechodzi do węzła 
+            if self.right is not None:                          # Jeśli po prawej stronie już coś istnieje, przechodzi do węzła
                 buff = self.right.add_new(number)               # W drodze powrotej przesyłą informacje o balansie
                 self.thanos_value += buff                       # Idealnie wyważone, tak jak wszystko powinno być
-                if self.thanos_value == 0:                      # Jeśli nowo ustalony balans wyniósł zero, nie ma powodu wysyłać informacji wyżej, ponieważ dodanie element nie miało już wpływu na wyższe węzły 
-                    buff = 0 
+                if self.thanos_value == 0:                      # Jeśli nowo ustalony balans wyniósł zero, nie ma powodu wysyłać informacji wyżej, ponieważ dodanie element nie miało już wpływu na wyższe węzły
+                    buff = 0
                 if abs(self.check_node_balance()) == 2:         # Jeśli spowodowało to niewyważenie uruchamiane jest balansowanie
                     buff = self.rotate()
                     self.father.balance()                       # Po rotacji drzewo balansowane jest na nowo od miejsca zrotowanego
@@ -208,7 +207,7 @@ class AVLNode(Node):
         if self.right is not None:
             self.right.show()
 
-    def balance(self, counter = 0):
+    def balance(self, counter=0):
         """
         Funckja która liczy balans wszystkich węzłów od wybranego w dół.
         Uruchamia się jedynie po rotacjach.
@@ -226,14 +225,13 @@ class AVLNode(Node):
         else:
             right_h = counter
         self.thanos_value = right_h - left_h
-        return max(right_h, left_h)                                 # Wyżej podawana jest większa z głębokości 
-            
+        return max(right_h, left_h)                                 # Wyżej podawana jest większa z głębokości
 
     def rotate(self):
         """
         Komentarz który tak naprawdę tu istnieje, ale jeszcze nie.
         """
-       # print("ROTACJA")
+        # print("ROTACJA")
         if self.check_node_balance() == -2:
             if self.left.check_node_balance() == 1:
                 self.rotate_left(self, self.left)
@@ -263,7 +261,7 @@ class AVLNode(Node):
 
         if right is not None:
             right.father = father
-        
+
     def rotate_right(self, father, node):
         left = node.left
         left_right = left.right
@@ -290,24 +288,23 @@ class AVLTree(BinaryTree):
     Drzewo AVL
     ROzbudowane drzewo Binarne, w którym różnica głębokości lewej i prawej gałęzi dla każdego węzła nie może być większa od 1
     """
-    def __init__(self, list_of_values = None):
+    def __init__(self, list_of_values=None):
         root = None
         self.treepot = Pot(root)
         if list_of_values is not None:
             self.take_list(list_of_values)
 
-
     def add_node(self, number):
         """
         Analogiczne do BST.
         """
-       # print(f"\n\nDODAWANIE: {number}")                  # Aby w konsoli zobaczyć proces tworzenia, należy odkomentować te trzy instrukcje
+        # print(f"\n\nDODAWANIE: {number}")                  # Aby w konsoli zobaczyć proces tworzenia, należy odkomentować te trzy instrukcje
         if self.treepot.root is None:
             self.treepot.root = AVLNode(number, self.treepot)
         else:
-        #   print(f"Nasz root: {self.treepot.root}")
-           self.treepot.root.add_new(number)
-          # self.show()
+            # print(f"Nasz root: {self.treepot.root}")
+            self.treepot.root.add_new(number)
+            # self.show()
 
     def find_node(self, number):
         """
@@ -326,6 +323,7 @@ class AVLTree(BinaryTree):
     def show(self):
         self.treepot.root.show()
 
+
 class Testing():
     """
     Klasa Testująca.
@@ -336,7 +334,7 @@ class Testing():
     - setting - Słownik: precision to co ile elementów liczyć; max_elements to do ilu elementów liczyć; number_of_repeats to ilość testów do wykonania dla pojedyńczego przypadków, z których poiliczy średnią
     - max_random_elements - tablica trzymająca tyle liczb ile mówi max_elements.
     """
-    def __init__(self, precision = 1000, max_elements = 10000, number_of_repeats = 10):
+    def __init__(self, precision=1000, max_elements=10000, number_of_repeats=10):
         self.time_answer = []
         self.counter_table = []
         self.settings = {"precision": 1000, "max_elements": 10000, "number_of_repeats": 10}
@@ -345,7 +343,7 @@ class Testing():
         self.max_random_elements = []
         self.calculate_mre()
 
-    def calculate_mre(self, sorted = False):
+    def calculate_mre(self, sorted=False):
         """
         Tworzy nową max_random_elements.
         Jeśli flaga sorted, stworzy posortowaną listę
@@ -362,8 +360,8 @@ class Testing():
         """
         obj = class_type(self.max_random_elements)
         return obj
-        
-    def change_settings(self, precision = None, max_elements = None, number_of_repeats = None):
+
+    def change_settings(self, precision=None, max_elements=None, number_of_repeats=None):
         """
         Zmienia ustawienia
         """
@@ -377,13 +375,13 @@ class Testing():
             self.settings["number_of_repeats"] = number_of_repeats
         self.new_counter_tab()
 
-    def new_counter_tab(self, sorted = False):
+    def new_counter_tab(self, sorted=False):
         """
         Tworzy nową counter_table, na podstawie settings
         """
         self.counter_table = [i*self.settings["precision"] for i in range(1, int(self.settings["max_elements"]/self.settings["precision"])+1)]
 
-    def clear_tables(self, answer_only = False):
+    def clear_tables(self, answer_only=False):
         """
         Wymazuje tablice objektu. Jeśli answer_only, wymaże jedynie odpowiedzi.
         """
@@ -392,7 +390,7 @@ class Testing():
             self.counter_table = []
             self.max_random_elements = []
 
-    def test_function(self, function, obj = None ,list_type = "random"):
+    def test_function(self, function, obj=None, list_type="random"):
         """
         Klasa licząca czas wykonania "function"
         Jeśli "function" jest metodą klasy, należy jako arg "obj" podać objekt tej Klasy.
@@ -411,10 +409,10 @@ class Testing():
             string_settings = f"from __main__ import {function}\nfrom random import randint"
         print(f"Obliczanie czasu: {function}")
         for test_elements in self.counter_table:
-            print(f"Liczba elementów: {test_elements}/{self.settings['max_elements']}", end = "\t")
+            print(f"Liczba elementów: {test_elements}/{self.settings['max_elements']}", end="\t")
             average = []
             for repeat in range(repeats_buff):
-                test_table=[]
+                test_table = []
                 if list_type == "sorted":
                     test_table = range(1, test_elements)
                 elif list_type == "random":
@@ -422,14 +420,14 @@ class Testing():
                 elif list_type == "memory":
                     test_table = self.max_random_elements[0:test_elements]
                 string_active = f"{function}({test_table})"
-                time = timeit(string_active, setup = string_settings, number = 1)
+                time = timeit(string_active, setup=string_settings, number=1)
                 average.append(time)
             buff = sum(average)/len(average)
             self.time_answer.append(buff)
             print(f"time: {buff}")
         return self.counter_table, self.time_answer
 
-    def save_to_file(self, name = "file"):
+    def save_to_file(self, name="file"):
         """
         Zapisywanie do pliku dwóch tablic, counter_table oraz time_answer
         """
@@ -445,49 +443,45 @@ class Testing():
 
 if __name__ == "__main__":
     _list = [randint(1, 10000) for i in range(1, 10000)]
-    _listsegr = range(1,100)
-    tablica_okropna = [44,20,18,45,30,33]           # Do sprawdzenia obrotu lewo-prawego
-    tablica_błaha = [3,2,1]                         
+    _listsegr = range(1, 100)
+    tablica_okropna = [44, 20, 18, 45, 30, 33]           # Do sprawdzenia obrotu lewo-prawego
+    tablica_błaha = [3, 2, 1]
 
-    #avltree = AVLTree(_list)                       # Dwie linie kodu wygenerują i wypiszą drzewo AVL
-    #avltree.show()
-    
-    ##Testowanie tworzenia BST i AVL
-    #testcreating = Testing()
-    #print(testcreating.test_function("BinaryTree"))
-    #testcreating.save_to_file("BSTadding")
-    #print(testcreating.test_function("AVLTree"))
-    #testcreating.save_to_file("AVLadding")
+    # avltree = AVLTree(_list)                       # Dwie linie kodu wygenerują i wypiszą drzewo AVL
+    # avltree.show()
 
-    ##Testowanie szukania BST i AVL
-    #testfinding = Testing(precision = 10000, max_elements = 200000)
-    #object1 = testfinding.load_object(BinaryTree)
-    #print(testfinding.test_function("find_alot", "object1", list_type = "memory"))
-    #testfinding.save_to_file("FindingBST")
-    #object2 = testfinding.load_object(AVLTree)
-    #print(testfinding.test_function("find_alot", "object2", list_type = "memory"))
-    #testfinding.save_to_file("FindingAVL")
+    # Testowanie tworzenia BST i AVL
+    # testcreating = Testing()
+    # print(testcreating.test_function("BinaryTree"))
+    # testcreating.save_to_file("BSTadding")
+    # print(testcreating.test_function("AVLTree"))
+    # testcreating.save_to_file("AVLadding")
 
-    ##Testowanie tworzenia BST i AVL (pesymistyczne)
-    #testcreatingpesimistic = Testing(precision = 100, max_elements = 1000)
-    #print(testcreatingpesimistic.test_function("BinaryTree", list_type = "sorted"))
-    #testcreatingpesimistic.save_to_file("BSTadding_psm")
-    #print(testcreatingpesimistic.test_function("AVLTree", list_type = "sorted"))
-    #testcreatingpesimistic.save_to_file("AVLadding_psm")
+    # Testowanie szukania BST i AVL
+    # testfinding = Testing(precision = 10000, max_elements = 200000)
+    # object1 = testfinding.load_object(BinaryTree)
+    # print(testfinding.test_function("find_alot", "object1", list_type = "memory"))
+    # testfinding.save_to_file("FindingBST")
+    # object2 = testfinding.load_object(AVLTree)
+    # print(testfinding.test_function("find_alot", "object2", list_type = "memory"))
+    # testfinding.save_to_file("FindingAVL")
 
-    #Testowanie szukania BST i AVL (pesymistyczne)
-    testfindingpesimistic = Testing(precision = 100, max_elements = 1000)
-    testfindingpesimistic.calculate_mre(sorted = True)
+    # Testowanie tworzenia BST i AVL (pesymistyczne)
+    # testcreatingpesimistic = Testing(precision = 100, max_elements = 1000)
+    # print(testcreatingpesimistic.test_function("BinaryTree", list_type = "sorted"))
+    # testcreatingpesimistic.save_to_file("BSTadding_psm")
+    # print(testcreatingpesimistic.test_function("AVLTree", list_type = "sorted"))
+    # testcreatingpesimistic.save_to_file("AVLadding_psm")
+
+    # Testowanie szukania BST i AVL (pesymistyczne)
+    testfindingpesimistic = Testing(precision=100, max_elements=1000)
+    testfindingpesimistic.calculate_mre(sorted=True)
     object1 = testfindingpesimistic.load_object(BinaryTree)
-    print(testfindingpesimistic.test_function("find_alot", "object1", list_type = "memory"))
+    print(testfindingpesimistic.test_function("find_alot", "object1", list_type="memory"))
     testfindingpesimistic.save_to_file("FindingBST_psm")
     object2 = testfindingpesimistic.load_object(AVLTree)
-    print(testfindingpesimistic.test_function("find_alot", "object2", list_type = "memory"))
+    print(testfindingpesimistic.test_function("find_alot", "object2", list_type="memory"))
     testfindingpesimistic.save_to_file("FindingAVL_psm")
 
-    #objectto = AVLTree([_list])
-    #timeit("objectto.find_alot", setup = "from __main__ import objectto")
-
-
-
-
+    # objectto = AVLTree([_list])
+    # timeit("objectto.find_alot", setup = "from __main__ import objectto")
