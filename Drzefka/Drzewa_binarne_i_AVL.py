@@ -299,15 +299,18 @@ class Testing():
             self.settings["number_of_repeats"] = number_of_repeats
         self.new_counter_tab()
 
-    def new_counter_tab(self):
-        self.counter_table = [i*self.settings["precision"] for i in range(1, int(self.settings["max_elements"]/self.settings["precision"])+1)]
+    def new_counter_tab(self, sorted = False):
+        if sorted:
+            self.counter_table = range(1, self.settings["max_elements"])
+        else:
+            self.counter_table = [i*self.settings["precision"] for i in range(1, int(self.settings["max_elements"]/self.settings["precision"])+1)]
 
     def clear_tables(self, answer_only = False):
         self.time_answer = []
         if not answer_only:
             self.counter_table = []
 
-    def test_function(self, function, obj = None ):
+    def test_function(self, function, obj = None ,list_type = "random"):
         self.time_answer = []
         repeats_buff = self.settings["number_of_repeats"]
         if obj is not None:
@@ -315,16 +318,20 @@ class Testing():
             function = f"{obj}.{function}"
         else:
             string_settings = f"from __main__ import {function}\nfrom random import randint"
+        print(f"Obliczanie czasu: {function}")
         for test_elements in self.counter_table:
             print(f"Liczba elementów: {test_elements}/{self.settings['max_elements']}", end = "\t")
             average = []
             for repeat in range(repeats_buff):
-                test_table = [randint(1, test_elements) for i in range(1, test_elements)]
+                test_table=[]
+                if list_type == "sorted":
+                    test_table = range(1, test_elements)
+                elif list_type == "random":
+                    test_table = [randint(1, test_elements) for i in range(1, test_elements)]
+                elif list_type == "memory":
+                    test_table == self.counter_table[:test_elements]
                 string_active = f"{function}({test_table})"
-                #print(string_active)
-                #print(string_settings)
                 time = timeit(string_active, setup = string_settings, number = 1)
-                #print(f"TIME: {time}")
                 average.append(time)
             buff = sum(average)/len(average)
             self.time_answer.append(buff)
@@ -336,10 +343,10 @@ class Testing():
             raise ValueError
         with open(f"{name}.txt", 'w') as file:
             for element in self.counter_table:
-                file.write(f"{element}, ")
+                file.write(f"{element};")
             file.write("\n")
             for element in self.time_answer:
-                file.write((f"{element}, "))
+                file.write((f"{element};"))
 
 
 if __name__ == "__main__":
@@ -359,23 +366,32 @@ if __name__ == "__main__":
     print(testcreating.test_function("AVLTree"))
     testcreating.save_to_file("AVLadding")
 
-    #testfinding = Testing(precision = 10000, max_elements = 300000)
-    #object1 = testfinding.load_object(BinaryTree)
-    #print(object1)
-    #print(testfinding.test_function("find_alot", "object1"))
-    #testfinding.save_to_file("FindingBST")
-    #object2 = testfinding.load_object(AVLTree)
-    #print(object2)
-    #print(testfinding.test_function("find_alot", "object2"))
-    #testfinding.save_to_file("FindingAVL")
+    testfinding = Testing(precision = 10000, max_elements = 300000)
+    object1 = testfinding.load_object(BinaryTree)
+    print(testfinding.test_function("find_alot", "object1", list_type = "memory"))
+    testfinding.save_to_file("FindingBST")
+    object2 = testfinding.load_object(AVLTree)
+    print(testfinding.test_function("find_alot", "object2", list_type = "memory"))
+    testfinding.save_to_file("FindingAVL")
+
+    testcreatingpesimistic = Testing()
+    print(testcreatingpesimistic.test_function("BinaryTree", sorted = True))
+    testcreatingpesimistic.save_to_file("BSTadding_psm")
+    print(testcreatingpesimistic.test_function("AVLTree", sorted = True))
+    testcreatingpesimistic.save_to_file("AVLadding_psm")
+
+    testfindingpesimistic = Testing(precision = 10000, max_elements = 300000)
+    testfindingpesimistic.new_counter_tab(sorted = True)
+    object1 = testfindingpesimistic.load_object(BinaryTree)
+    print(testfindingpesimistic.test_function("find_alot", "object1", list_type = "memory"))
+    testfindingpesimistic.save_to_file("FindingBST_psm")
+    object2 = testfindingpesimistic.load_object(AVLTree)
+    print(testfindingpesimistic.test_function("find_alot", "object2", list_type = "memory"))
+    testfindingpesimistic.save_to_file("FindingAVL_psm")
 
     #objectto = AVLTree([_list])
     #timeit("objectto.find_alot", setup = "from __main__ import objectto")
 
-    avltree = AVLTree(range(1,1000))
-    print(timeit("avltree.find_node(999)", setup = "from __main__ import avltree", number = 10))
-    bsttree = BinaryTree(range(1,1000))
-    print(timeit("bsttree.find_node(999)", setup = "from __main__ import bsttree", number = 10))
 
 
 
