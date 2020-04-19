@@ -3,8 +3,9 @@ from timeit import timeit
 import sys
 sys.setrecursionlimit(20000)
 
+
 class BinaryTreeError(Exception):
-    pass 
+    pass
 
 
 class Node:
@@ -22,7 +23,7 @@ class Node:
             self.number_of_copies += 1
         elif self.node_value < number:
             if self.right is not None:
-                self.right.add_new(number)   
+                self.right.add_new(number)
             else:
                 self.right = Node(number)
         else:
@@ -116,7 +117,7 @@ class AVLNode(Node):
                 buff = self.right.add_new(number)
                 self.thanos_value += buff
                 if self.thanos_value == 0:
-                    buff = 0 
+                    buff = 0
                 if abs(self.check_node_balance()) == 2:
                     buff = self.rotate()
                     self.father.balance()
@@ -133,7 +134,7 @@ class AVLNode(Node):
                 buff = self.left.add_new(number)
                 self.thanos_value -= buff
                 if self.thanos_value == 0:
-                    buff = 0 
+                    buff = 0
                 if abs(self.check_node_balance()) == 2:
                     buff = self.rotate()
                     self.father.balance()
@@ -219,7 +220,7 @@ class AVLNode(Node):
     def rotate_right(self, father, node):
         left = node.left
         left_right = left.right
-        
+
         left.set_right(node)
         if node is not None:
             node.father = left
