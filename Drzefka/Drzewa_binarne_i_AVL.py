@@ -1,4 +1,7 @@
 from random import randint
+from timeit import timeit
+import sys
+sys.setrecursionlimit(20000)
 
 class BinaryTreeError(Exception):
     pass 
@@ -37,8 +40,12 @@ class Node:
 
 
 class BinaryTree:
-    def __init__(self, list_of_values):
+    def __init__(self, list_of_values = None):
         self.root = None
+        if list_of_values != None:
+            self.take_list(list_of_values)
+
+    def take_list(self, list_of_values):
         for element in list_of_values:
             self.add_node(element)
 
@@ -52,7 +59,7 @@ class BinaryTree:
         active_node = self.root
         while active_node.node_value != number:
             if active_node.right is None and active_node.left is None:
-                raise BinaryTreeError("Number not found")
+                return None
             if number > active_node.node_value:
                 active_node = active_node.right
             else:
@@ -61,6 +68,13 @@ class BinaryTree:
 
     def show(self):
         print(self.root.show())
+
+    def find_alot(self, list_of_values):
+        for value in list_of_values:
+            try:
+                find_node(value)
+            except:
+                pass
 
 
 class Pot():
@@ -224,11 +238,13 @@ class AVLNode(Node):
 
 
 class AVLTree(BinaryTree):
-    def __init__(self, list_of_values):
+    def __init__(self, list_of_values = None):
         root = None
         self.treepot = Pot(root)
-        for element in list_of_values:
-            self.add_node(element)
+        if list_of_values is not None:
+            self.take_list(list_of_values)
+        #for element in list_of_values:
+        #    self.add_node(element)
 
     def add_node(self, number):
        # print(f"\n\nDODAWANIE: {number}")
@@ -239,18 +255,127 @@ class AVLTree(BinaryTree):
            self.treepot.root.add_new(number)
           # self.show()
 
+    def find_node(self, number):
+        active_node = self.treepot.root
+        while active_node.node_value != number:
+            if active_node.right is None and active_node.left is None:
+                raise BinaryTreeError("Number not found")
+            if number > active_node.node_value:
+                active_node = active_node.right
+            else:
+                active_node = active_node.left
+        return active_node
+
     def show(self):
         self.treepot.root.show()
 
+class Testing():
+    def __init__(self, precision = 1000, max_elements = 10000, number_of_repeats = 10):
+        self.time_answer = []
+        self.counter_table = []
+        self.settings = {"precision": 1000, "max_elements": 10000, "number_of_repeats": 10}
+        self.change_settings(precision, max_elements, number_of_repeats)
+        self.new_counter_tab()
+        self.max_random_elements = []
+        self.calculate_mre()
+
+    def calculate_mre(self):
+        self.max_random_elements = [randint(1, self.settings["max_elements"]) for i in range(1, self.settings["max_elements"])]
+
+    def load_object(self, class_type):
+        obj = class_type(self.max_random_elements)
+        print(obj.find_node(40))
+        return obj
+
+        
+    def change_settings(self, precision = None, max_elements = None, number_of_repeats = None):
+        if max_elements < 1 or precision < 1 or number_of_repeats < 1:
+            raise ValueError
+        if precision is not None:
+            self.settings["precision"] = precision
+        if precision is not None:
+            self.settings["max_elements"] = max_elements
+        if precision is not None:
+            self.settings["number_of_repeats"] = number_of_repeats
+        self.new_counter_tab()
+
+    def new_counter_tab(self):
+        self.counter_table = [i*self.settings["precision"] for i in range(1, int(self.settings["max_elements"]/self.settings["precision"])+1)]
+
+    def clear_tables(self, answer_only = False):
+        self.time_answer = []
+        if not answer_only:
+            self.counter_table = []
+
+    def test_function(self, function, obj = None ):
+        self.time_answer = []
+        repeats_buff = self.settings["number_of_repeats"]
+        if obj is not None:
+            string_settings = f"from __main__ import {obj}\nfrom random import randint"
+            function = f"{obj}.{function}"
+        else:
+            string_settings = f"from __main__ import {function}\nfrom random import randint"
+        for test_elements in self.counter_table:
+            print(f"Liczba elementów: {test_elements}/{self.settings['max_elements']}", end = "\t")
+            average = []
+            for repeat in range(repeats_buff):
+                test_table = [randint(1, test_elements) for i in range(1, test_elements)]
+                string_active = f"{function}({test_table})"
+                #print(string_active)
+                #print(string_settings)
+                time = timeit(string_active, setup = string_settings, number = 1)
+                #print(f"TIME: {time}")
+                average.append(time)
+            buff = sum(average)/len(average)
+            self.time_answer.append(buff)
+            print(f"time: {buff}")
+        return self.counter_table, self.time_answer
+
+    def save_to_file(self, name = "file"):
+        if len(self.counter_table) != len(self.time_answer) or not len(self.counter_table) or not len(self.time_answer):
+            raise ValueError
+        with open(f"{name}.txt", 'w') as file:
+            for element in self.counter_table:
+                file.write(f"{element}, ")
+            file.write("\n")
+            for element in self.time_answer:
+                file.write((f"{element}, "))
+
 
 if __name__ == "__main__":
-    _list = [randint(1, 50) for i in range(1, 1000)]
-    tablica_rosnaca = [1,2,3,4,5,6,7,8,9,10]
+    _list = [randint(1, 10000) for i in range(1, 10000)]
+    _listsegr = range(1,100)
     tablica_test = [10,7,12,5,8,11,13,4,6,2]
     tablica_okropna = [44,20,18,45,30,33]
-    tabb = [3,2,1]
+    tablica_błaha = [3,2,1]
 
-    avltree = AVLTree(_list)
-    avltree.show()
+    #avltree = AVLTree(_list)
+    #avltree.show()
     #print(_list)
     
+    testcreating = Testing()
+    print(testcreating.test_function("BinaryTree"))
+    testcreating.save_to_file("BSTadding")
+    print(testcreating.test_function("AVLTree"))
+    testcreating.save_to_file("AVLadding")
+
+    #testfinding = Testing(precision = 10000, max_elements = 300000)
+    #object1 = testfinding.load_object(BinaryTree)
+    #print(object1)
+    #print(testfinding.test_function("find_alot", "object1"))
+    #testfinding.save_to_file("FindingBST")
+    #object2 = testfinding.load_object(AVLTree)
+    #print(object2)
+    #print(testfinding.test_function("find_alot", "object2"))
+    #testfinding.save_to_file("FindingAVL")
+
+    #objectto = AVLTree([_list])
+    #timeit("objectto.find_alot", setup = "from __main__ import objectto")
+
+    avltree = AVLTree(range(1,1000))
+    print(timeit("avltree.find_node(999)", setup = "from __main__ import avltree", number = 10))
+    bsttree = BinaryTree(range(1,1000))
+    print(timeit("bsttree.find_node(999)", setup = "from __main__ import bsttree", number = 10))
+
+
+
