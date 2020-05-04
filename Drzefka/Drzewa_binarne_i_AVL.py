@@ -379,7 +379,7 @@ class Testing():
         """
         Tworzy nową counter_table, na podstawie settings
         """
-        self.counter_table = [i*self.settings["precision"] for i in range(1, int(self.settings["max_elements"]/self.settings["precision"])+1)]
+        self.counter_table = [i * self.settings["precision"] for i in range(1, int(self.settings["max_elements"] / self.settings["precision"]) + 1)]
 
     def clear_tables(self, answer_only=False):
         """
@@ -422,7 +422,7 @@ class Testing():
                 string_active = f"{function}({test_table})"
                 time = timeit(string_active, setup=string_settings, number=1)
                 average.append(time)
-            buff = sum(average)/len(average)
+            buff = sum(average) / len(average)
             self.time_answer.append(buff)
             print(f"time: {buff}")
         return self.counter_table, self.time_answer

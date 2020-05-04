@@ -2,13 +2,14 @@ from random import randint
 from timeit import timeit
 import matplotlib.pyplot as plt
 
+
 class Heap:
     """
     Stos maksymalny. Zaimplementowany na liście jednowymiarowej.
     """
     def __init__(self, init_table=None, branches=2):
         """
-        Podczas tworzenia kopca w konstruktorze podajemy tablicę 
+        Podczas tworzenia kopca w konstruktorze podajemy tablicę
         z jakiej ma zrobić kopiec oraz ilość gałęzi na węzeł (domyślnie 2)
         """
         self.branches = branches
@@ -16,30 +17,30 @@ class Heap:
         if init_table is not None:
             self.makeStack(init_table)
 
-    def makeStack(self, table):               #Tworzy kopiec z listy
+    def makeStack(self, table):
+        """
+        Tworzy kopiec z listy
+        """
         for value in table:
             self.add(value)
-            #print(f"DODAWANIE {value}")
-            #self.show()
-            #print("\n")
 
     def add(self, number):
         """
-        Dodawanie elementu i kopcowanie 
+        Dodawanie elementu i kopcowanie
         """
         if len(self.values) == 1:   # Jeśli dodawany jest pierwszy element to nie ma sensu kopcować
             self.values.append(number)
         else:
             child = len(self.values)
             self.values.append(number)
-            const = (child+(self.branches-2))//self.branches    # Ojciec (adres) węzła umiejszczany jest w zmiennej const
-            while self.values[child] > self.values[const]:  #Jeśli dodany element jest większy od ojca....
-                temp = self.values[child]                   
-                self.values[child] = self.values[const]     #To jest zamieniany miejscami
+            const = (child + (self.branches - 2)) // self.branches  # Ojciec (adres) węzła umiejszczany jest w zmiennej const
+            while self.values[child] > self.values[const]:          # Jeśli dodany element jest większy od ojca....
+                temp = self.values[child]
+                self.values[child] = self.values[const]             # To jest zamieniany miejscami
                 self.values[const] = temp
                 child = const
-                const = (child+(self.branches-2))//self.branches    
-                if const == 0:                              #Jeśli dotarliśmy do korzenia to przerywamy kopcowanie 
+                const = (child + (self.branches - 2)) // self.branches
+                if const == 0:                                      # Jeśli dotarliśmy do korzenia to przerywamy kopcowanie
                     break
 
     def checkStack(self) -> bool:
@@ -48,26 +49,26 @@ class Heap:
         """
         for i in range(1, len(self.values)):
             node = self.values[i]
-            for j in range(self.branches-1, -1, -1):
-                if self.branches*i+1-j < len(self.values):
-                    if node < self.values[self.branches*i+1-j]:
+            for j in range(self.branches - 1, -1, -1):
+                if self.branches * i + 1 - j < len(self.values):
+                    if node < self.values[self.branches * i + 1 - j]:
                         return False
         return True
 
-        
     def show(self):
         """
         Dla każdego z węzłów pokazuje jego synów w konwencji:
         OJCIEC | SYN, SYN, ..., SYN
         """
-        for i in range(1, len(self.values)):                                    #Czyli dla każdego węzła...
+        for i in range(1, len(self.values)):                                        # Czyli dla każdego węzła...
             print(f"Node: {self.values[i]:>4}\tBranches: ", end="")
-            for j in range(self.branches-1, -1, -1):                            #...Bierzemy tyle węzłów ile z niego wychodzi... 
-                if self.branches*i+1-j < len(self.values):
-                    print(f"{self.values[self.branches*i+1-j]:>4} ", end="")    #... I dla każdego wypisujemy jego dane
+            for j in range(self.branches - 1, -1, -1):                              # ...Bierzemy tyle węzłów ile z niego wychodzi...
+                if self.branches * i + 1 - j < len(self.values):
+                    print(f"{self.values[self.branches * i + 1 - j]:>4} ", end="")  # ... I dla każdego wypisujemy jego dane
                 else:
                     print("None ", end="")
             print()
+
 
 class Testing():
     """
@@ -124,7 +125,7 @@ class Testing():
         """
         Tworzy nową counter_table, na podstawie settings
         """
-        self.counter_table = [i*self.settings["precision"] for i in range(1, int(self.settings["max_elements"]/self.settings["precision"])+1)]
+        self.counter_table = [i * self.settings["precision"] for i in range(1, int(self.settings["max_elements"] / self.settings["precision"]) + 1)]
 
     def clear_tables(self, answer_only=False):
         """
@@ -135,7 +136,7 @@ class Testing():
             self.counter_table = []
             self.max_random_elements = []
 
-    def test_function(self, function, obj=None, list_type="random", argument = None):
+    def test_function(self, function, obj=None, list_type="random", argument=None):
         """
         Klasa licząca czas wykonania "function"
         Jeśli "function" jest metodą klasy, należy jako arg "obj" podać objekt tej Klasy.
@@ -164,13 +165,13 @@ class Testing():
                     test_table = [randint(1, test_elements) for i in range(1, test_elements)]
                 elif list_type == "memory":
                     test_table = self.max_random_elements[0:test_elements]
-                if argument == None:
+                if argument is None:
                     string_active = f"{function}({test_table})"
                 else:
                     string_active = f"{function}({test_table}, {argument})"
                 time = timeit(string_active, setup=string_settings, number=1)
                 average.append(time)
-            buff = sum(average)/len(average)
+            buff = sum(average) / len(average)
             self.time_answer.append(buff)
             print(f"time: {buff}")
         return self.counter_table, self.time_answer
@@ -189,7 +190,7 @@ class Testing():
                 element = str(element).replace(".", ",")
                 file.write((f"{element};"))
 
-    def show_plot(self, label_string, save  = False):
+    def show_plot(self, label_string, save=False):
         plt.plot(self.counter_table, self.time_answer)
         plt.title(label_string)
         plt.ylabel('Time of execution [s]')
@@ -201,11 +202,11 @@ class Testing():
 
 
 if __name__ == "__main__":
-    #_list = [randint(1, 1000000) for i in range(1, 1000000)]
-    #h = Heap(branches=3)
-    #h.makeStack(_list)
-    #print(h.checkStack())
-    #h.show()
+    # _list = [randint(1, 1000000) for i in range(1, 1000000)]
+    # h = Heap(branches=3)
+    # h.makeStack(_list)
+    # print(h.checkStack())
+    # h.show()
 
     testcreating2 = Testing(2000, 100000, 7)
     testcreating2.test_function("Heap")
@@ -213,14 +214,11 @@ if __name__ == "__main__":
     testcreating2.show_plot("Heap for 2 braches")
 
     testcreating3 = Testing(2000, 100000, 7)
-    testcreating3.test_function("Heap",  argument = "branches = 3")
+    testcreating3.test_function("Heap", argument="branches = 3")
     testcreating3.save_to_file("Heap_3")
     testcreating3.show_plot("Heap for 3 braches")
 
     testcreating4 = Testing(2000, 100000, 7)
-    testcreating4.test_function("Heap",  argument = "branches = 4")
+    testcreating4.test_function("Heap", argument="branches = 4")
     testcreating4.save_to_file("Heap_4")
     testcreating4.show_plot("Heap for 4 braches")
-
-
-
