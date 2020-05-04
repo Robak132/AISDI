@@ -3,7 +3,14 @@ from timeit import timeit
 import matplotlib.pyplot as plt
 
 class Heap:
+    """
+    Stos maksymalny. Zaimplementowany na liście jednowymiarowej.
+    """
     def __init__(self, init_table=None, branches=2):
+        """
+        Podczas tworzenia kopca w konstruktorze podajemy tablicę 
+        z jakiej ma zrobić kopiec oraz ilość gałęzi na węzeł (domyślnie 2)
+        """
         self.branches = branches
         self.values = [None]
         if init_table is not None:
@@ -17,22 +24,28 @@ class Heap:
             #print("\n")
 
     def add(self, number):
-        if len(self.values) == 1:
+        """
+        Dodawanie elementu i kopcowanie 
+        """
+        if len(self.values) == 1:   # Jeśli dodawany jest pierwszy element to nie ma sensu kopcować
             self.values.append(number)
         else:
             child = len(self.values)
             self.values.append(number)
-            const = (child+(self.branches-2))//self.branches
-            while self.values[child] > self.values[const]:
-                temp = self.values[child]
-                self.values[child] = self.values[const]
+            const = (child+(self.branches-2))//self.branches    # Ojciec (adres) węzła umiejszczany jest w zmiennej const
+            while self.values[child] > self.values[const]:  #Jeśli dodany element jest większy od ojca....
+                temp = self.values[child]                   
+                self.values[child] = self.values[const]     #To jest zamieniany miejscami
                 self.values[const] = temp
                 child = const
-                const = (child+(self.branches-2))//self.branches
-                if const == 0:
+                const = (child+(self.branches-2))//self.branches    
+                if const == 0:                              #Jeśli dotarliśmy do korzenia to przerywamy kopcowanie 
                     break
 
     def checkStack(self) -> bool:
+        """
+        Dla każdego z węzłów sprawdza czy węzły niżej są od niego mniejsze
+        """
         for i in range(1, len(self.values)):
             node = self.values[i]
             for j in range(self.branches-1, -1, -1):
@@ -43,11 +56,15 @@ class Heap:
 
         
     def show(self):
-        for i in range(1, len(self.values)):
+        """
+        Dla każdego z węzłów pokazuje jego synów w konwencji:
+        OJCIEC | SYN, SYN, ..., SYN
+        """
+        for i in range(1, len(self.values)):                                    #Czyli dla każdego węzła...
             print(f"Node: {self.values[i]:>4}\tBranches: ", end="")
-            for j in range(self.branches-1, -1, -1):
+            for j in range(self.branches-1, -1, -1):                            #...Bierzemy tyle węzłów ile z niego wychodzi... 
                 if self.branches*i+1-j < len(self.values):
-                    print(f"{self.values[self.branches*i+1-j]:>4} ", end="")
+                    print(f"{self.values[self.branches*i+1-j]:>4} ", end="")    #... I dla każdego wypisujemy jego dane
                 else:
                     print("None ", end="")
             print()
