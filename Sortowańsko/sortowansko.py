@@ -8,11 +8,11 @@ import timeit
 def bubblesort(table):
     copy_table = table
     for i in range(len(copy_table)):
-        for j in range(1, len(copy_table)-i):
-            if copy_table[j] < copy_table[j-1]:
+        for j in range(1, len(copy_table) - i):
+            if copy_table[j] < copy_table[j - 1]:
                 boot = copy_table[j]
-                copy_table[j] = copy_table[j-1]
-                copy_table[j-1] = boot
+                copy_table[j] = copy_table[j - 1]
+                copy_table[j - 1] = boot
     return copy_table
 
 
@@ -65,8 +65,8 @@ def quicksort_t(table, _min, _max):
             q -= 1
         if p == q:
             break
-    quicksort_t(table, _min, p-1)
-    quicksort_t(table, p+1, _max)
+    quicksort_t(table, _min, p - 1)
+    quicksort_t(table, p + 1, _max)
 
 
 def measureSorting(func, table, elements=None):
@@ -90,7 +90,7 @@ def load(file_name):
 
 def print_mesurements(func, table, start, stop, step, file_name):
     with open(file_name, "w+") as file:
-        for i in range(start, stop+1, step):
+        for i in range(start, stop + 1, step):
             time = measureSorting(func, table, i)
             file.write(f"{i:6}: {str(time).replace('.', ',')}\n")
             print(f"{i:6}: {str(time).replace('.', ',')}")
@@ -106,9 +106,9 @@ def sort_test(table):
 
 
 def selection_sort_2(array):
-    for i in range(0, len(array)-1):
+    for i in range(0, len(array) - 1):
         _min = i
-        for j in range(i+1, len(array)):
+        for j in range(i + 1, len(array)):
             if (array[j] < array[_min]):
                 _min = j
         array[i], array[_min] = array[_min], array[i]
