@@ -1,4 +1,5 @@
-from Testing import Testing
+import Testing
+import timeit
 
 
 def dictify(string):
@@ -46,16 +47,14 @@ def testBoilerMur():
 
 
 def special_algorithm(string, text):
-    p = 0
+    len_t = len(text)
+    len_s = len(string)
     list_of_pos = []
-    for i in range(len(text)):
-        if string[p] == text[i]:
-            p += 1
-            if p == len(string):
-                list_of_pos.append(i - len(string) + 1)
-                p = 0
-        else:
-            p = 0
+    if len_s == 0 or len_t == 0 or len_s > len_t:
+        return list_of_pos
+    for i in range(len_t - len_s + 1):
+        if string == text[i:i + len_s]:
+            list_of_pos.append(i)
     return list_of_pos
 
 
@@ -70,10 +69,43 @@ def make_words_and_text(_file, n):
         return words, plain_text
 
 
+def make_tests(funcion):
+    print("pusty jeden lub oba napisy wejściowe")
+    print(funcion("", "cos") == [])
+    print(funcion("cos", "") == [])
+    print(funcion("", "") == [])
+
+    print("napis ‘string’ równy napisowi 'text'")
+    print(funcion("string", "string") == [0])
+
+    print("napis ‘string’ dłuższy od napisu ‘text’")
+    print(funcion("dlugistring", "string") == [])
+
+    print("napis ‘string’ nie występuje w ‘text’")
+    print(funcion("string", "test") == [])
+
+    print("'abc' in 'abcefgrtyabeabccvabc'")
+    print(funcion("abc", "abcefgrtyabeabccvabc") == [0, 12, 17])
+
+    print("'a' in 'aaaaaaaaaaaa'")
+    print(funcion("a", "aaaaaaaaaaaa") == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+
+    print("'ma' in 'Mama ma kota'")
+    print(funcion("ma", "Mama ma kota") == [2, 5])
+
+
 if __name__ == "__main__":
-    words, text = make_words_and_text("Wzorcowansko\\pan-tadeusz.txt", 100)
-    for word in words:
-        special_algorithm(word, text)
-    # d = dictify("halpha")
-    # print(d.keys())
-    # print(d.values())
+    make_tests(special_algorithm)
+
+    #   words, text = make_words_and_text("Wzorcowansko\\pan-tadeusz.txt", 1000)
+    #   for word in words:
+    #       special_algorithm(word, text)
+
+    """
+    string_s = f"from __main__ import special_algorithm\nfrom __main__ import text, words"   
+    for i in range(0, len(words), 100):
+        time = 0
+        for j in words[:i]:
+            time += timeit.timeit(f"special_algorithm('{j}', text)", string_s, number=1)
+        print(f"{i:<5}{time}")
+    """
