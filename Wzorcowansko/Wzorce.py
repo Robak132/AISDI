@@ -1,4 +1,3 @@
-import Testing
 import timeit
 
 
@@ -12,24 +11,24 @@ def dictify(string):
 
 def boilerMur(find, text):
     dicty = dictify(find)
-    print(dicty)
     F = len(text)
     T = len(find)
     ans_tab = []
-    if F==0 or T==0:
+    if F == 0 or T == 0:
         return ans_tab
     index = 0
-    while index <= F-T:
-        j = T-1
-        while j>=0 and find[j] == text[index+j]:
+    while index <= F - T:
+        j = T - 1
+        while j >= 0 and find[j] == text[index + j]:
             j -= 1
-        if (j == -1): 
+        if (j == -1):
             ans_tab.append(index)
             index += 1
-        else: 
-            if text[index+j] in dicty.keys():
-                index += max(dicty[text[index+j]], 1)
-            else: index += j+1   
+        else:
+            if text[index + j] in dicty.keys():
+                index += max(dicty[text[index + j]], 1)
+            else:
+                index += j + 1
     return ans_tab
 
 
@@ -41,8 +40,8 @@ def testBoilerMur():
     pure_thruth.append(boilerMur("", "") == [])
     pure_thruth.append(boilerMur("hmm", "") == [])
     pure_thruth.append(boilerMur("", "hmm") == [])
-    pure_thruth.append(boilerMur( "decde","abcdecdecde" ) == [3,6])
-    pure_thruth.append(boilerMur( "aaa","aaaaaaaaaaa" ) == [0,1,2,3,4,5,6,7,8])
+    pure_thruth.append(boilerMur("decde", "abcdecdecde") == [3, 6])
+    pure_thruth.append(boilerMur("aaa", "aaaaaaaaaaa") == [0, 1, 2, 3, 4, 5, 6, 7, 8])
     print(pure_thruth)
 
 
@@ -69,43 +68,48 @@ def make_words_and_text(_file, n):
         return words, plain_text
 
 
-def make_tests(funcion):
+def make_tests(function):
     print("pusty jeden lub oba napisy wejściowe")
-    print(funcion("", "cos") == [])
-    print(funcion("cos", "") == [])
-    print(funcion("", "") == [])
+    print(function("", "cos") == [])
+    print(function("cos", "") == [])
+    print(function("", "") == [])
 
     print("napis ‘string’ równy napisowi 'text'")
-    print(funcion("string", "string") == [0])
+    print(function("string", "string") == [0])
 
     print("napis ‘string’ dłuższy od napisu ‘text’")
-    print(funcion("dlugistring", "string") == [])
+    print(function("dlugistring", "string") == [])
 
     print("napis ‘string’ nie występuje w ‘text’")
-    print(funcion("string", "test") == [])
+    print(function("string", "test") == [])
 
     print("'abc' in 'abcefgrtyabeabccvabc'")
-    print(funcion("abc", "abcefgrtyabeabccvabc") == [0, 12, 17])
+    print(function("abc", "abcefgrtyabeabccvabc") == [0, 12, 17])
 
     print("'a' in 'aaaaaaaaaaaa'")
-    print(funcion("a", "aaaaaaaaaaaa") == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+    print(function("a", "aaaaaaaaaaaa") == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
 
     print("'ma' in 'Mama ma kota'")
-    print(funcion("ma", "Mama ma kota") == [2, 5])
+    print(function("ma", "Mama ma kota") == [2, 5])
+
+
+def save_result_to_file(function, namefile):
+    with open("Wzorcowansko\\{namefile}", "w+") as newfile:
+        n = 201
+        dn = 10
+        words, text = make_words_and_text("Wzorcowansko\\pan-tadeusz.txt", n)
+
+        string_s = f"from __main__ import {function}\nfrom __main__ import text, words"
+        for i in range(0, len(words), dn):
+            time = 0
+            for j in words[:i]:
+                time += timeit.timeit(f"{function}('{j}', text)", string_s, number=1)
+            print(i)
+            newfile.write(f"{str(time).replace('.', ',')};")
 
 
 if __name__ == "__main__":
     make_tests(special_algorithm)
-
-    #   words, text = make_words_and_text("Wzorcowansko\\pan-tadeusz.txt", 1000)
-    #   for word in words:
-    #       special_algorithm(word, text)
-
-    """
-    string_s = f"from __main__ import special_algorithm\nfrom __main__ import text, words"   
-    for i in range(0, len(words), 100):
-        time = 0
-        for j in words[:i]:
-            time += timeit.timeit(f"special_algorithm('{j}', text)", string_s, number=1)
-        print(f"{i:<5}{time}")
-    """
+    make_tests(boilerMur)
+#    save_result_to_file(special_algorithm, "naiwny.txt")
+#    save_result_to_file(boilerMur, "boilermur.txt")
