@@ -1,4 +1,7 @@
 import timeit
+from random import choice
+
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z']
 
 
 def dictify(string):
@@ -108,8 +111,24 @@ def save_result_to_file(function, namefile):
             newfile.write(f"{str(time).replace('.', ',')};")
 
 
+def random_test(amount=1):
+    for j in range(amount):
+        text = ""
+        for i in range(500):
+            text += choice(alphabet)
+        key = ""
+        for i in range(2):
+            key += choice(alphabet)
+
+        _naive = special_algorithm(key, text)
+        _boilermur = boilerMur(key, text)
+        print(_naive == _boilermur)
+
+
 if __name__ == "__main__":
-    make_tests(special_algorithm)
-    make_tests(boilerMur)
-#    save_result_to_file(special_algorithm, "naiwny.txt")
-#    save_result_to_file(boilerMur, "boilermur.txt")
+    # make_tests(special_algorithm)
+    # make_tests(boilerMur)
+    # random_test(10)
+
+    # save_result_to_file(special_algorithm, "naiwny.txt")
+    # save_result_to_file(boilerMur, "boilermur.txt")
