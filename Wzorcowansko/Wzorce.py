@@ -5,6 +5,12 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'
 
 
 def dictify(string):
+    """
+    Funkcja tworząca słownik 
+    która do każdego chara wyrazu 
+    przypsuje pierwsze od końca miejsce 
+    wystąpienia zaczynając od zera
+    """
     temp_dict = {}
     for value, letter in enumerate(string[::-1]):
         if letter not in temp_dict.keys():
@@ -13,6 +19,12 @@ def dictify(string):
 
 
 def boilerMur(find, text):
+    """
+    Algorytm Boyera-Moora.
+    Porównuje ostatnie symbole wyrazu i szukanego miejsca, sprawdzając czy symbol jest we wzorcu.
+    Jeśli jest przesuwa się na odpowiednią odległość.
+
+    """
     dicty = dictify(find)
     F = len(text)
     T = len(find)
@@ -21,21 +33,24 @@ def boilerMur(find, text):
         return ans_tab
     index = 0
     while index <= F - T:
-        j = T - 1
-        while j >= 0 and find[j] == text[index + j]:
+        j = T - 1                                       #Licznik (po charach we wzorcu)
+        while j >= 0 and find[j] == text[index + j]:    #Porównuje słowo...
             j -= 1
-        if (j == -1):
+        if (j == -1):                                   # ... Jeśli przejdzie przez całe słowo i wzorzec, zapisuje inddex i przesuwa się w zwyż.
             ans_tab.append(index)
             index += 1
-        else:
-            if text[index + j] in dicty.keys():
-                index += max(dicty[text[index + j]], 1)
+        else:                                           # Jeśli napotka różnicę to
+            if text[index + j] in dicty.keys():         # Sprawdza czy różniąca się litera jest we wzorcu.
+                index += max(dicty[text[index + j]], 1) # I przesuwa o jej pozycję od końca
             else:
-                index += j + 1
+                index += j + 1                          # Jeśli nie ma go w słowie to wyrównuje i skacze o długość.
     return ans_tab
 
 
 def testBoilerMur():
+    """
+    Testy do algorytmu
+    """
     pure_thruth = []
     pure_thruth.append(boilerMur("cdeca", "cdeca") == [0])
     pure_thruth.append(boilerMur("cdeca", "cdec") == [])
@@ -49,18 +64,24 @@ def testBoilerMur():
 
 
 def special_algorithm(string, text):
+    """
+    Algorytm naiwny. Iteruje po elementach.
+    """
     len_t = len(text)
     len_s = len(string)
     list_of_pos = []
     if len_s == 0 or len_t == 0 or len_s > len_t:
-        return list_of_pos
-    for i in range(len_t - len_s + 1):
-        if string == text[i:i + len_s]:
+        return list_of_pos                          # Gdy poda się nieprawidłowe kończy.
+    for i in range(len_t - len_s + 1):              # Porównuje każdy znak wzorca
+        if string == text[i:i + len_s]:             # Jeśli napisy się zgadzają zapisuje index.
             list_of_pos.append(i)
     return list_of_pos
 
 
 def make_words_and_text(_file, n):
+    """
+    Wczytuje z pliku tekst
+    """
     with open(_file, "r", encoding="utf-8") as file:
         lines = file.readlines()
         plain_text = ""
@@ -72,6 +93,9 @@ def make_words_and_text(_file, n):
 
 
 def make_tests(function):
+    """
+    DOdatkowe testy do algorytmów
+    """
     print("pusty jeden lub oba napisy wejściowe")
     print(function("", "cos") == [])
     print(function("cos", "") == [])
@@ -97,6 +121,9 @@ def make_tests(function):
 
 
 def save_result_to_file(function, namefile):
+    """
+    Pomiar czasu wyonywania "function", oraz zapis do pliku wyników pomiaru.
+    """
     with open("Wzorcowansko\\{namefile}", "w+") as newfile:
         n = 201
         dn = 10
@@ -112,6 +139,9 @@ def save_result_to_file(function, namefile):
 
 
 def random_test(amount=1):
+    """
+    Test wykonujący się dla losowych znaków.
+    """
     for j in range(amount):
         text = ""
         for i in range(500):
