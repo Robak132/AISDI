@@ -45,7 +45,8 @@ class Graph:
 
         for y in range(6):
             for x in range(6):
-                if (y,x) in 
+                #if (y,x) in 
+                pass
 
         
 
