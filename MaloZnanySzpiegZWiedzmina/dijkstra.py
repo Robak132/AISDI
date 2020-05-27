@@ -7,7 +7,7 @@ class Graph:
         self.start, self.end = self.searchForZeros(self.map)
 
         self.basic_list = []
-        self.distances = [[0, 0, 0, 0, 0] for i in range(len(self.map))] 
+        self.distances = [[0, 0, 0, 0, 0] for i in range(len(self.map))]
         for y in range(6):
             for x in range(6):
                 self.distances[y][x] = Node(math.inf, y, x)
