@@ -1,13 +1,24 @@
 import math
+from random import randint
 
 
 class Graph:
-    def __init__(self, name):
-        self.map = self.load(name)
+    def __init__(self, name=None):
+        if name is not None:
+            self.map = self.load(name)
+        else:
+            self.map = self.generate_map()
+
         self.start, self.end = self.searchForZeros(self.map)
 
         self.basic_list = []
-        self.distances = [[0, 0, 0, 0, 0] for i in range(len(self.map))]
+        self.distances = []
+        for i in range(len(self.map)):
+            temp = []
+            for j in range(len(self.map[0])):
+                temp.append(0)
+            self.distances.append(temp)
+
         for y in range(6):
             for x in range(6):
                 self.distances[y][x] = Node(math.inf, y, x)
@@ -26,6 +37,34 @@ class Graph:
             self.basic_list.pop(0)
             self.basic_list = sorted(self.basic_list)
 
+    def show_map(self):
+        for y in range(6):
+            for x in range(6):
+                print(f"{self.map[y][x]}", end="")
+            print("")
+
+    def generate_map(self):
+        new_map = []
+        for y in range(6):
+            temp = []
+            for x in range(6):
+                temp.append(randint(1, 9))
+            new_map.append(temp)
+
+        x0 = randint(0, 5)
+        y0 = randint(0, 5)
+        new_map[y0][x0] = 0
+
+        x = randint(0, 5)
+        y = randint(0, 5)
+        while (abs(x - x0) <= 2 or abs(y - y0) <= 2):
+            x = randint(0, 5)
+            y = randint(0, 5)
+
+        new_map[y][x] = 0
+        return new_map
+
+    def show(self):
         x, y = self.end
         next_one = self.distances[y][x]
         coordinate_list = [(self.start[1], self.start[0])]
@@ -36,12 +75,14 @@ class Graph:
             next_one = next_one.precursor
         for y in range(6):
             for x in range(6):
+                print(f"{self.map[y][x]}", end="")
+            print("\t", end="")
+            for x in range(6):
                 if (y, x) in coordinate_list:
                     print(f"{self.map[y][x]}", end="")
                 else:
                     print("•", end="")
             print("")
-        print(coordinate_list)
 
     def findNeighbour(self, node):
         connections = []
@@ -66,7 +107,7 @@ class Graph:
         answers_tab = []
         for y, row in enumerate(twoDtab):
             for x, elem in enumerate(row):
-                if elem == "0":
+                if int(elem) == 0:
                     answers_tab.append((x, y))
         return answers_tab
 
@@ -86,5 +127,11 @@ class Node:
 
 
 if __name__ == "__main__":
-    Graph("MaloZnanySzpiegZWiedzmina//mapa.txt")
-    pass
+    g = Graph("MaloZnanySzpiegZWiedzmina//mapa.txt")
+    g.show()
+    print()
+
+    for x in range(3):
+        g = Graph()
+        g.show()
+        print()
